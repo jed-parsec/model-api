@@ -1,4 +1,6 @@
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Force TensorFlow to use CPU
+
 import numpy as np
 import tensorflow as tf
 from fastapi import FastAPI, UploadFile, File

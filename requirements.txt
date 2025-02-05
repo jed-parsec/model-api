@@ -1,5 +1,5 @@
+tensorflow-cpu==2.14.0
 fastapi
 uvicorn
-tensorflow
 numpy
 pillow
