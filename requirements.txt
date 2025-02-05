@@ -1,5 +1,4 @@
-fastapi
-joblib
-uvicorn
+streamlit
+tensorflow
 numpy
 pillow
