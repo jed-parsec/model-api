@@ -11,7 +11,7 @@ from PIL import Image
 app = FastAPI()
 
 # Load the trained model
-model = load_model("pest_recognition_model.keras")
+model = load_model("model.keras")
 
 # Define class labels
 pest_names = ['Brown Planthopper', 'Green Leaf Hopper', 'Rice Black Bug', 'Rice Bug', 'White Yellow Stemborer']
