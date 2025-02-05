@@ -2,8 +2,9 @@ import streamlit as st
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
+from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
+import json
 
 # Load the trained model
 model = load_model("model.keras")
@@ -40,13 +41,12 @@ def preprocess_image(image: Image.Image):
     image_expanded = np.expand_dims(image_array, axis=0)  
     return image_expanded
 
-# Streamlit App
-st.title("Pest Recognition AI")
+# Streamlit API
+st.title("Pest Recognition API")
 
 uploaded_file = st.file_uploader("Upload an Image", type=["jpg", "png", "jpeg"])
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded Image", use_column_width=True)
 
     # Preprocess image
     processed_image = preprocess_image(image)
@@ -57,10 +57,12 @@ if uploaded_file is not None:
     predicted_class = pest_names[np.argmax(result)]
     confidence_score = float(np.max(result) * 100)
 
-    # Display results
-    st.subheader(f"Prediction: {predicted_class}")
-    st.write(f"Confidence: {confidence_score:.2f}%")
-    st.write("### Pest Details:")
-    st.write(f"**{pest_info[predicted_class]['Details']}**")
-    st.write(f"**Damage:** {pest_info[predicted_class]['Damage']}")
+    # Prepare JSON response
+    response = {
+        "predicted_class": predicted_class,
+        "confidence": confidence_score,
+        "details": pest_info[predicted_class]['Details'],
+        "damage": pest_info[predicted_class]['Damage']
+    }
+
 
