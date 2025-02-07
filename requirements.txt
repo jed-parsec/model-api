@@ -1,5 +1,5 @@
 tensorflow
 fastapi
 uvicorn
-numpy>2
+numpy
 pillow
