@@ -1,6 +1,4 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Force TensorFlow to use CPU
-
 import numpy as np
 import tensorflow as tf
 from fastapi import FastAPI, UploadFile, File
@@ -9,16 +7,12 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from io import BytesIO
 from PIL import Image
 
-# Initialize FastAPI app
 app = FastAPI()
 
-# Load the trained model
 model = load_model("model.keras")
 
-# Define class labels
 pest_names = ['Brown Planthopper', 'Green Leaf Hopper', 'Rice Black Bug', 'Rice Bug', 'White Yellow Stemborer']
 
-# Pest information
 pest_info = {
     'Green Leaf Hopper': {
         'Details': "Most common leafhoppers in rice fields. They spread the viral disease tungro. Both nymphs and adults feed by extracting plant sap.",
@@ -62,35 +56,28 @@ pest_info = {
     }
 }
 
-# Function to preprocess image
+
 def preprocess_image(image: Image.Image):
-    image = image.resize((180, 180))  # Resize to model input size
-    image_array = img_to_array(image)  # Convert to NumPy array
-    image_expanded = np.expand_dims(image_array, axis=0)  # Expand dimensions for batch
+    image = image.resize((180, 180))  
+    image_array = img_to_array(image)  
+    image_expanded = np.expand_dims(image_array, axis=0)  
     return image_expanded
 
-# API endpoint to classify an uploaded image
 @app.post("/predict/")
 async def predict(file: UploadFile = File(...)):
-    # Read image file
     image_bytes = await file.read()
     image = Image.open(BytesIO(image_bytes))
 
-    # Preprocess the image
     processed_image = preprocess_image(image)
 
-    # Make prediction
     predictions = model.predict(processed_image)
     result = tf.nn.softmax(predictions[0])
     
-    # Get predicted class and confidence
     predicted_class = pest_names[np.argmax(result)]
     confidence_score = float(np.max(result) * 100)
 
-    # Get additional pest information
     info = pest_info.get(predicted_class, {})
 
-    # Return response
     return {
         "filename": file.filename,
         "predicted_class": predicted_class,
