@@ -48,7 +48,7 @@ def preprocess_image(image):
     return image_expanded
 
 # Streamlit UI
-st.title("🌾 Pest Identification App")
+st.title("Pest Identification App")
 st.write("Upload an image of a rice pest to identify it.")
 
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
