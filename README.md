@@ -42,7 +42,6 @@ model-api/
 │   ├── app-gui.py      # Streamlit GUI
 │   ├── model.keras     # Trained model
 │   ├── requirements.txt # Dependencies
-│   ├── train.py        # Model training script
 ```
 
 
